@@ -3,4 +3,5 @@
 ## 목차
 
 - [HTML](https://github.com/dineug/DLA/tree/master/HTML)
-- [CSS](https://developer.mozilla.org/ko/docs/Web/CSS)
+- [CSS](https://github.com/dineug/DLA/tree/master/CSS)
+- [JavaScript](https://github.com/dineug/DLA/tree/master/JavaScript)
