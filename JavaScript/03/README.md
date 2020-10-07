@@ -401,7 +401,169 @@ function test() {
 test();
 ```
 
+## 키워드와 예약어
+
+키워드는 제어문의 시작과 끝을 나타낸다거나 특정한 조작 목적으로 쓰입니다.  
+예약어는 아직은 특별한 쓰임새가 없지만 미래에 키워드로 쓸 가능성이 있으므로 예약해 둔 것입니다.
+
+스트릭트 모드에서는 다음 예약어가 추가됩니다.  
+> implements package public interface private static let protected yield
+
+예약어는 식별자로 쓸 수 없지만  
+스트릭트 모드에서만 추가되는 예약어는 사용이 가능합니다.  
+
+Good
+
+```js
+(function () {
+  "use strict";
+  var let = 1; // Unexpected strict mode reserved word
+})();
+```
+
+Bad
+
+```js
+var let = 1; // let은 예약어지만 스트릭트 모드에서만 추가되서 가능합니다.
+```
+
+## 데이터 타입
+
+ECMAScript에는 다섯 가지 기본적인 데이터 타입이 있습니다.  
+이를 원시(primitive) 데이터 타입이라 부르기도 합니다.  
+원시 타입으로는
+- Undefined
+- Null
+- Boolean
+- Number
+- String
+
+객체는 이름-값 쌍의 순서 없는 목록입니다.  
+
+## typeof 연산자
+
+| type | Describe |
+|---|---|
+| undefined | 정의되지 않은 변수 |
+| boolean | 불리언 |
+| string | 문자열 |
+| number | 숫자 |
+| object | 함수를 제외한 객체 또는 null |
+| function | 함수 |
+| bigint | 정밀한 큰 정수 |
+
+```js
+var message = "some string";
+console.log(typeof message) // string
+console.log(typeof(message)) // string
+console.log(typeof 95) // number
+```
+
+> 기술적으로 말해 ECMAScript의 함수는 객체로 간주됩니다.  
+> 함수에는 다른 객체에 없는 특별한 프로퍼티가 존재하므로 typeof 연산자가 함수를  
+> 다른 객체와 구별해 반환하는 것이 합리적입니다.
+
+## undefined 타입
+
+javascript에서 undefined로 값이 없음을 나타내는 특별한 값입니다.  
+명시적으로 개발자가 값이 없음을 표현할때는 null을 사용합니다.
+
+```js
+const message; // 초기화를 하지않으면 기본값은 undefined 입니다.
+console.log(typeof message); // undefined
+console.log(typeof age); // undefined
+```
+
+## Null 타입
+
+null은 빈 객체를 가리키는 포인터이므로 null에 typeof를 호출하면 object를 반환합니다.
+
+```js
+const car = null;
+console.log(typeof car); // object
+```
+
+undefined는 null에서 파생했으므로 두 값을 비교할때 암묵적 형변환에서는 동일한 것으로 간주합니다.
+
+```js
+console.log(null == undefined); // true
+```
+
+## 불리언 타입
+
+if문 같은 제어문에서 자동 형변환되기 때문에 각 타입별 true, false 인지 해야됩니다.
+
+| 데이터 타입 | true | false |
+|---|---|---|
+| 문자열 | 비어 있는 않 문자열 모두 | "" |
+| 숫자 | 0이 아닌 모든 숫자, 무한대 포함 | 0, NaN |
+| 객체 | 모든 객체 | null |
+| Undefined | 해당 없음 | undefined |
+
+```js
+Array.length && console.log('foo');
+```
+
+## 숫자 타입
+
+다양한 숫자 리터럴 형식을 통해 여러 가지 숫자 타입을 나타냅니다.
+
+- 10진법 10
+- 8진법 010
+- 16진법 0x10
+- 부동소수점 0.1
+- 지수표기법 1e+21
+- bigint 10n
+
+스트릭트 모드에서는 8진법 리터럴을 허용하지 않으며 문법 에러를 반환합니다.
+> 부동소주점 숫자를 저장할 때는 정수를 저장할 때에 비해 메모리를 두 배로 소모합니다.
+
+부동소수점 숫자는 소수점 아래 17자리까지 정확하기는 하지만 사칙 연산에 있어서는  
+전체 숫자보다 훨씬 부정확합니다.
+
+```js
+0.1 + 0.2 // 0.30000000000000004
+0.1 + 0.2 == 0.3 // false
+```
+
+> IEEE-754에서 정의한 방식대로 부동소수점 숫자를 계산하는 언어에는 모두 나타나는 문제입니다.
+
+숫자 범위
+
+일반적인 숫자타입은 메모리 제한 때문에 표현할 수 있는 범위가 정해져있습니다.  
+범위를 벗어나면 Infinity, -Infinity를 반환합니다.
+
+```js
+console.log(Number.MAX_VALUE, Number.MIN_VALUE);
+const value = Number.MAX_VALUE + Number.MAX_VALUE;
+console.log(value);
+console.log(isFinite(value));
+```
+
+NaN(Not a Number)
+
+이 값은 숫자를 반환할 것으로 의도한 조작이 실패했을 때 반환합니다.  
+
+```js
+console.log(NaN == NaN); // false
+// NaN 끼리 비교로 알 수 없기때문에 isNaN 함수를 따로 제공합니다.
+console.log(isNaN(NaN)); // true
+console.log(isNaN(10)); // false
+console.log(isNaN("10")); // false
+console.log(isNaN("blue")); // true
+console.log(isNaN(true)); // false
+```
+
+## 문자열
+
+```js
+const a = 'single quote';
+const b = 'double quote';
+const c = `backtick`;
+```
+
 ## Reference
 
 - [https://poiemaweb.com/js-strict-mode](https://poiemaweb.com/js-strict-mode)
 - [https://github.com/jamiebuilds/the-super-tiny-compiler](https://github.com/jamiebuilds/the-super-tiny-compiler)
+- [Template_literals](https://developer.mozilla.org/ko/docs/Web/JavaScript/Reference/Template_literals)
