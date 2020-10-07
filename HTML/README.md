@@ -2,7 +2,9 @@
 
 ## HTML 이란
 
-HTML - Hypertext Markup Language 마크업 언어이며 특정한 약속을 정의한 스펙
+HTML - Hypertext Markup Language 마크업 언어이며 특정한 약속을 정의한 스펙  
+XML과 HTML 연관성은 SGML 파생되거나 영향을 받은거 말고는 공통점이 없습니다.  
+단 스펙의 범위로 볼때 다음과 같이 표현할 수 있습니다.
 
 ![html-diagram](https://github.com/dineug/DLA/blob/master/HTML/html-01.png?raw=true)
 
