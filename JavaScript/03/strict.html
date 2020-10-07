@@ -1,0 +1,18 @@
+<!DOCTYPE html>
+<html>
+  <head>
+    <meta
+      http-equiv="Content-Security-Policy"
+      content="default-src * file: https: 'unsafe-inline' 'unsafe-eval';
+        script-src file: blob: data: https: 'unsafe-inline' 'unsafe-eval';
+        style-src https: 'unsafe-inline';
+        img-src data: https:;
+        connect-src file: blob: data: https: http:;"
+    />
+  </head>
+  <body>
+    <script src="./strict_good.js"></script>
+    <script src="./strict_bad.js"></script>
+    <script type="module"></script>
+  </body>
+</html>
