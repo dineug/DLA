@@ -558,8 +558,177 @@ console.log(isNaN(true)); // false
 
 ```js
 const a = 'single quote';
-const b = 'double quote';
-const c = `backtick`;
+const b = "double quote";
+const c = `backtick
+          ${a} ${b}`;
+
+// tagged templates
+function myTag(strings, ...args) {
+  console.log(strings, ...args);
+  return strings.join(" ");
+}
+const d = 'template';
+console.log(myTag`hello \n ${d} literals! ${a} ${b} ${c}`);
+```
+
+ECMAScript에서 문자열은 불변(immutable)입니다.
+
+```js
+let lang = "J";
+lang = lang + "ava" + "Script";
+
+// J
+// ava
+// Script
+// Java
+// JavaScript
+```
+
+## 객체 타입
+
+ECMAScript의 Object 타입은 파생하는 모든 객체의 원형입니다.  
+Object 타입의 프로퍼티와 메서드를 전부 상속합니다.
+
+| Name | Describe |
+| --- | --- |
+| constructor | 해당 객체를 만드는데 쓰인 함수 |
+| hasOwnProperty(propertyName) | 해당 프로퍼티가 객체 인스턴스에 고유하며 타입에서 상속하지 않았음을 확인 |
+| isPrototypeOf(object) | 해당 객체가 다른 객체의 프로토타입인지 확인 |
+| propertyIsEnumerable(propertyName) | 해당 프로퍼티를 for-in 문에서 나열할 수 있는지 확인 |
+| toLocaleString() | 객체를 지역에 맞게 표현한 문자열을 반환 |
+| toString() | 객체를 문자열로 변환해 반환 |
+| valueOf() | 객체를 나타내는 문자열이나 숫자 불리언을 반환 |
+
+## 불리언 연산자
+
+### 논리 NOT
+
+NOT 연산자를 연달아 두 개 쓰면 Boolean() 함수를 쓴 것과 마찬가지 효과가 있습니다.
+
+```js
+console.log(!!"blue"); // true
+console.log(!!0); // false
+console.log(!!NaN); // false
+console.log(!!""); // false
+console.log(!!12345); // true
+```
+
+### 논리 AND
+
+단축 연산을 실행하며 첫번째 피연산자가 false로 평가되면  
+두번째 피연산자는 평가하지 않습니다.
+
+```js
+const a = false && '123'; // false
+const b = true && '123';  // '123'
+```
+
+### 논리 OR
+
+단축 연산을 실행하며 첫번째 피연산자가 true로 평가되면  
+두번째 피연산자는 평가하지 않습니다.
+
+```js
+const port = false || '3000'; // '3000'
+const port2 = true || '3000'; // true
+```
+
+## 곱셈 관련 연산자
+
+```js
+const row = 4;
+const col = 10;
+const arr = [];
+for (let i = 0; i < row; i++) {
+  if (!Array.isArray(arr[i])) {
+    arr[i] = [];
+  }
+
+  for (let j = 0; j < col; j++) {
+    arr[i][j] = i+j;
+  }
+}
+
+console.log(arr);
+
+const arr2 = [];
+for(let k = 0; k < row * col; k++) {
+  const i = Math.floor(k / col);
+  const j = k % col;
+
+  if (!Array.isArray(arr2[i])) {
+    arr2[i] = [];
+  }
+
+  arr2[i][j] = k;
+}
+
+console.log(arr2);
+```
+
+## 동일 연산자
+
+```js
+console.log("55" == 55); // true
+console.log("55" === 55); // false
+console.log("55" != 55); // false
+console.log("55" !== 55); // true
+```
+
+## 3항 연산자
+
+```js
+typeof a === 'object'
+  ? 'object'
+  : typeof a === 'undefined'
+  ? 'undefined'
+  : '?';
+```
+
+## 제어문
+
+```js
+const obj = { a:0, b:1, c:2 };
+for (const name in obj) { // 객체 프로퍼티에 순서가 없음
+  console.log(name);
+}
+Object.keys(obj).forEach(name => console.log(name));
+
+for (const [key, value] of Object.entries(obj)) {
+  console.log(key, value);
+}
+
+const obj2 = [0, 1, 2];
+for (const value of obj2) {
+  console.log(value);
+}
+
+function* counter(max) {
+  let index = 0;
+  while (index < max) {
+    yield index++;
+  }
+}
+
+for (const value of counter(20)) {
+  console.log(value);
+}
+
+const a = [];
+typeof a[Symbol.iterator];
+
+const b = { a:0, b:1, c:2, d:3 };
+typeof b[Symbol.iterator];
+
+b[Symbol.iterator] = function* () {
+  for (const name in this) {
+    yield b[name];
+  }
+}
+
+for (const value of b) {
+  console.log(value);
+}
 ```
 
 ## Reference
@@ -567,3 +736,6 @@ const c = `backtick`;
 - [https://poiemaweb.com/js-strict-mode](https://poiemaweb.com/js-strict-mode)
 - [https://github.com/jamiebuilds/the-super-tiny-compiler](https://github.com/jamiebuilds/the-super-tiny-compiler)
 - [Template_literals](https://developer.mozilla.org/ko/docs/Web/JavaScript/Reference/Template_literals)
+- [htm](https://github.com/developit/htm)
+- [lit-html](https://github.com/Polymer/lit-html)
+- [Iteration_protocols](https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Iteration_protocols#iterator)
