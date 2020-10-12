@@ -729,6 +729,15 @@ b[Symbol.iterator] = function* () {
 for (const value of b) {
   console.log(value);
 }
+
+function* flat(iter) {
+    for (const v of iter) {
+        if (v && v[Symbol.iterator]) yield* flat(v);
+        else yield v;
+    }
+}
+const deepArray = [1, [2, 3, [4, 5, 6, [7, 8 ,9, 10]], [11, 12, 13], [[[[[[100]]]]]]]];
+for (const v of flat(deepArray)) console.log(v);
 ```
 
 ## Reference
