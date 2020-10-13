@@ -16,7 +16,6 @@ function setObserver(raw, p) {
     if (observers) {
       if (!observers.includes(currentObserver)) {
         observers.push(currentObserver);
-        rawToObservers.set(raw, observers);
       }
     } else {
       rawToObservers.set(raw, [currentObserver]);
@@ -56,21 +55,21 @@ function observable(raw) {
 function effect(target, p) {
   const observers = rawToObservers.get(target);
   if (observers) {
-    Promise.resolve().then(() => observers.forEach(observer => observer()));
-    // Promise.resolve()
-    //   .then(() => {
-    //     const isTask = rawToTask.has(target);
-    //     if (!isTask) {
-    //       rawToTask.set(target, observers);
-    //     }
-    //     return !isTask;
-    //   })
-    //   .then((isTask) => {
-    //     if (isTask) {
-    //       rawToTask.get(target).forEach(observer => observer());
-    //     }
-    //   })
-    //   .finally(() => rawToTask.delete(target));
+    // Promise.resolve().then(() => observers.forEach(observer => observer()));
+    Promise.resolve()
+      .then(() => {
+        const isTask = rawToTask.has(target);
+        if (!isTask) {
+          rawToTask.set(target, observers);
+        }
+        return !isTask;
+      })
+      .then((isTask) => {
+        if (isTask) {
+          rawToTask.get(target).forEach(observer => observer());
+        }
+      })
+      .finally(() => rawToTask.delete(target));
   }
 }
 
