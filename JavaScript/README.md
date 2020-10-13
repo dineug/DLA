@@ -5,3 +5,4 @@
 ## 목차
 
 - [3장](https://github.com/dineug/DLA/tree/master/JavaScript/03)
+- [4장](https://github.com/dineug/DLA/tree/master/JavaScript/04)
