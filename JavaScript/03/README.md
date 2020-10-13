@@ -16,7 +16,7 @@ const a$ = 1;
 const _a = 1;
 ```
 
-Bad
+Error
 
 ```js
 const 1a = 1;
