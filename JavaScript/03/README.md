@@ -740,6 +740,60 @@ const deepArray = [1, [2, 3, [4, 5, 6, [7, 8 ,9, 10]], [11, 12, 13], [[[[[[100]]
 for (const v of flat(deepArray)) console.log(v);
 ```
 
+## Task
+
+```js
+queueMicrotask(() => {
+  console.log('토끼1');
+});
+setTimeout(() => {
+  console.log('거북이');
+}, 0);
+requestAnimationFrame(() => {
+  console.log('requestAnimationFrame');
+});
+queueMicrotask(() => {
+  console.log('토끼2');
+});
+queueMicrotask(() => {
+  console.log('토끼3');
+  queueMicrotask(() => {
+    console.log('토끼4');
+    queueMicrotask(() => {
+      console.log('토끼5');
+      queueMicrotask(() => {
+        console.log('토끼6');
+        queueMicrotask(() => {
+          console.log('토끼7');
+        });
+      });
+    });
+  });
+});
+
+Promise.resolve().then(() => {
+  console.log('친척 토끼1');
+});
+Promise.resolve().then(() => {
+  console.log('친척 토끼2');
+});
+Promise.resolve().then(() => {
+  console.log('친척 토끼3');
+  Promise.resolve().then(() => {
+    console.log('친척 토끼4');
+    Promise.resolve().then(() => {
+      console.log('친척 토끼5');
+      Promise.resolve().then(() => {
+        console.log('친척 토끼6');
+        Promise.resolve().then(() => {
+          console.log('친척 토끼7');
+        });
+      });
+    });
+  });
+});
+```
+
 ## Reference
 
 - [https://poiemaweb.com/js-strict-mode](https://poiemaweb.com/js-strict-mode)
@@ -748,3 +802,4 @@ for (const v of flat(deepArray)) console.log(v);
 - [htm](https://github.com/developit/htm)
 - [lit-html](https://github.com/Polymer/lit-html)
 - [Iteration_protocols](https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Iteration_protocols#iterator)
+- [queueMicrotask](https://developer.mozilla.org/en-US/docs/Web/API/WindowOrWorkerGlobalScope/queueMicrotask)
