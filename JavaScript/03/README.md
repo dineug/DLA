@@ -483,7 +483,7 @@ const car = null;
 console.log(typeof car); // object
 ```
 
-undefined는 null에서 파생했으므로 두 값을 비교할때 암묵적 형변환에서는 동일한 것으로 간주합니다.
+두 값을 비교할때 암묵적 형변환에서는 동일한 것으로 간주합니다.
 
 ```js
 console.log(null == undefined); // true
@@ -744,27 +744,27 @@ for (const v of flat(deepArray)) console.log(v);
 
 ```js
 queueMicrotask(() => {
-  console.log('토끼1');
+  console.log('queueMicrotask 토끼1');
 });
 setTimeout(() => {
-  console.log('거북이');
+  console.log('setTimeout 거북이');
 }, 0);
 requestAnimationFrame(() => {
   console.log('requestAnimationFrame');
 });
 queueMicrotask(() => {
-  console.log('토끼2');
+  console.log('queueMicrotask 토끼2');
 });
 queueMicrotask(() => {
-  console.log('토끼3');
+  console.log('queueMicrotask 토끼3');
   queueMicrotask(() => {
-    console.log('토끼4');
+    console.log('queueMicrotask 토끼4');
     queueMicrotask(() => {
-      console.log('토끼5');
+      console.log('queueMicrotask 토끼5');
       queueMicrotask(() => {
-        console.log('토끼6');
+        console.log('queueMicrotask 토끼6');
         queueMicrotask(() => {
-          console.log('토끼7');
+          console.log('queueMicrotask 토끼7');
         });
       });
     });
@@ -772,21 +772,21 @@ queueMicrotask(() => {
 });
 
 Promise.resolve().then(() => {
-  console.log('친척 토끼1');
+  console.log('Promise 친척 토끼1');
 });
 Promise.resolve().then(() => {
-  console.log('친척 토끼2');
+  console.log('Promise 친척 토끼2');
 });
 Promise.resolve().then(() => {
-  console.log('친척 토끼3');
+  console.log('Promise 친척 토끼3');
   Promise.resolve().then(() => {
-    console.log('친척 토끼4');
+    console.log('Promise 친척 토끼4');
     Promise.resolve().then(() => {
-      console.log('친척 토끼5');
+      console.log('Promise 친척 토끼5');
       Promise.resolve().then(() => {
-        console.log('친척 토끼6');
+        console.log('Promise 친척 토끼6');
         Promise.resolve().then(() => {
-          console.log('친척 토끼7');
+          console.log('Promise 친척 토끼7');
         });
       });
     });

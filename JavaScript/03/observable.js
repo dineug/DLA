@@ -58,11 +58,11 @@ function effect(target, p) {
     // Promise.resolve().then(() => observers.forEach(observer => observer()));
     Promise.resolve()
       .then(() => {
-        const isTask = rawToTask.has(target);
-        if (!isTask) {
+        const isTask = !rawToTask.has(target);
+        if (isTask) {
           rawToTask.set(target, observers);
         }
-        return !isTask;
+        return isTask;
       })
       .then((isTask) => {
         if (isTask) {
