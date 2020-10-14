@@ -161,6 +161,120 @@ console.log(john.bonus);
 - 주요 프로세스가 완료될 때 힙에 있는 객체들은 어떤 포인터도 가지고 있지 않고 혼자 남게 된다.
 - 명시적으로 복사하지 않으면, 다른 객체 내의 모든 객체 참조들은 참조 포인터를 사용해 연결된다.
 
+## 타입 판별
+
+```js
+person instanceof Object; // person 변수가 Object의 인스턴스인가?
+colors instanceof Array; // colors 변수가 Array의 인스턴스인가?
+pattern instanceof RegExp; // pattern 변수가 RegExp의 인스턴스인가?
+```
+
+- 모든 참조 값은 Object의 인스턴승인 것으로 정의되어 있으므로 참조 값은 항상 true를 반환
+- 원시 값은 Object의 인스턴스가 아니므로 항상 false 반환
+
+## 실행 컨텍스트와 스코프
+
+### 컨텍스트
+
+- 변수나 함수의 실행 컨텍스트는 다른 데이터에 접근할 수 있는지, 어떻게 행동하는지를 규정합니다.
+- 각 실행 컨텍스트에는 변수 객체(variable object)가 연결되어 있으며 해당 컨텍스트에서 정의된 모든 변수와 함수는 이 객체에 존재합니다.
+- 이 객체를 코드에서 접근할 수는 없지만 이면에서 데이터를 다룰 때 이 객체를 이용합니다.
+- 가장 바깥쪽에 존재하는 실행 컨텍스트는 전역 컨텍스트입니다.
+- 실행 컨텍스트는 포함된 코드가 모두 실행될 때 파괴되는데, 이때 해당 컨텍스트 내부에서 정의된 변수와 함수도 함께 파괴됩니다.
+- 전역 컨텍스트는 애플리케이션이 종료될 때, 예를 들어 웹페이지에서 나가거나 브라우저를 닫을 때까지 계속 유지됩니다.
+- 함수를 호출하면 독자적인 실행 컨텍스트가 생성됩니다.
+- 코드 실행이 함수로 들어갈 때마다 함수의 컨텍스트가 컨텍스트 스택에 쌓입니다.
+- 함수 실행이 끝나면 해당 컨텍스트를 스택에서 꺼내고 컨트롤을 이전 컨텍스트에 반환합니다.
+
+### 스코프 체인(scope chain)
+
+- 컨텍스트에서 코드를 실행하면 변수 객체에 `스코프 체인`이 만들어집니다.
+- 스코프 체인의 목적은 실행 컨텍스트가 접근할 수 있는 모든 변수와 함수에 순서를 정의하는 것입니다.
+- 스코프 체인의 앞쪽은 항상 코드가 실행되는 컨텍스트의 변수 객체입니다.
+- 변수 객체의 다음 순서는 해당 컨텍스트를 포함하는 컨텍스트(부모 컨텍스트)이며 그 다음에는 다시 부모의 부모 컨텍스트입니다.
+- 이런 식으로 계속 진행하여 전역 컨텍스트에 도달할 때까지 계속합니다.
+- 전역 컨텍스트의 변수 객체는 항상 스코프 체인의 마지막에 존재합니다.
+- 식별자를 찾을 때는 스코프 체인 순서를 따라가면서 해당 식별자 이름을 검색합니다.
+
+```js
+let color = "blue";
+function changeColor() {
+  let anotherColor = "red";
+  function swapColors() {
+    const tempColor = anotherColor;
+    anotherColor = color;
+    color = tempColor;
+    // color, anotherColor, tempColor 모두 접근 가능
+  }
+  // color, anotherColor 접근 가능, tempColor는 불가능
+  swapColors();
+}
+// color만 접근 가능
+changeColor();
+```
+
+실행 컨텍스트가 세 개 있습니다.
+
+- 전역 컨텍스트
+- changeColor()의 로컬 컨텍스트
+- swapColors()의 로컬 컨텍스트
+
+![js-scope-chain](https://github.com/dineug/DLA/blob/master/JavaScript/04/js-16.png?raw=true)
+
+### var에는 블록 레벨 스코프가 없습니다
+
+```js
+if (true) {
+  var color = "blue";
+}
+console.log(color); // "blue"
+
+for (var i = 0; i < 10; i++) {
+  // logic
+}
+console.log(i); // 10
+```
+
+### const, let은 블록 스코프가 존재합니다
+
+```js
+if (true) {
+  const color = "blue";
+}
+console.log(color); // ReferenceError: color is not defined
+
+for (let i = 0; i < 10; i++) {
+  // logic
+}
+console.log(i); // ReferenceError: i is not defined
+```
+
+### 식별자 검색
+
+```js
+const color = "blue";
+function getColor() {
+  return color;
+}
+
+console.log(getColor()); // "blue"
+```
+
+![js-scope-chain2](https://github.com/dineug/DLA/blob/master/JavaScript/04/js-17.png?raw=true)
+
+```js
+const color = "blue";
+function getColor() {
+  const color = "red";
+  return color;
+}
+
+console.log(getColor()); // "red"
+```
+
+> 지역 변수를 참조할 때는 다음 변수 객체를 검색하지 않도록 자동으로 검색이 멈춤니다.  
+> 식별자가 로컬 컨텍스트에 정의되어 있으면 부모 컨텍스트에 같은 이름의 식별자가 있다 해도 참조할 수 없습니다.
+
 ## Reference
 
 - [https://medium.com/@ethannam/javascripts-memory-model-7c972cd2c239](https://medium.com/@ethannam/javascripts-memory-model-7c972cd2c239)
@@ -168,3 +282,4 @@ console.log(john.bonus);
 - [https://ui.dev/javascript-visualizer/](https://ui.dev/javascript-visualizer/)
 - [https://speakerdeck.com/deepu105/v8-memory-usage-stack-and-heap](https://speakerdeck.com/deepu105/v8-memory-usage-stack-and-heap)
 - [https://ui.toast.com/weekly-pick/ko_20200228/](https://ui.toast.com/weekly-pick/ko_20200228/)
+- [https://poiemaweb.com/es6-block-scope](https://poiemaweb.com/es6-block-scope)

@@ -903,3 +903,4 @@ start();
 - [lit-html](https://github.com/Polymer/lit-html)
 - [Iteration_protocols](https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Iteration_protocols#iterator)
 - [queueMicrotask](https://developer.mozilla.org/en-US/docs/Web/API/WindowOrWorkerGlobalScope/queueMicrotask)
+- [https://ui.toast.com/weekly-pick/ko_20190531/](https://ui.toast.com/weekly-pick/ko_20190531/)
