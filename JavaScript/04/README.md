@@ -303,6 +303,8 @@ console.log(getColor()); // "red"
 
 #### 순환 참조 (cyclic/circular reference)
 
+![js-circular-reference](https://github.com/dineug/DLA/blob/master/JavaScript/04/js-18.png?raw=true)
+
 ```js
 function problem() {
   const objectA = new Object();
@@ -326,3 +328,4 @@ function problem() {
 - [https://poiemaweb.com/es6-block-scope](https://poiemaweb.com/es6-block-scope)
 - [https://medium.com/naver-place-dev/%EC%9E%90%EB%B0%94%EC%8A%A4%ED%81%AC%EB%A6%BD%ED%8A%B8%EC%99%80-v8-%EC%97%94%EC%A7%84%EC%9D%98-%EB%A9%94%EB%AA%A8%EB%A6%AC-%EA%B4%80%EB%A6%AC-%ED%94%84%EB%A1%9C%EC%84%B8%EC%8A%A4-f45091e696e1](https://medium.com/naver-place-dev/%EC%9E%90%EB%B0%94%EC%8A%A4%ED%81%AC%EB%A6%BD%ED%8A%B8%EC%99%80-v8-%EC%97%94%EC%A7%84%EC%9D%98-%EB%A9%94%EB%AA%A8%EB%A6%AC-%EA%B4%80%EB%A6%AC-%ED%94%84%EB%A1%9C%EC%84%B8%EC%8A%A4-f45091e696e1)
 - [https://dev.to/deepu105/visualizing-memory-management-in-v8-engine-javascript-nodejs-deno-webassembly-105p](https://dev.to/deepu105/visualizing-memory-management-in-v8-engine-javascript-nodejs-deno-webassembly-105p)
+- [https://en.wikipedia.org/wiki/Circular_reference](https://en.wikipedia.org/wiki/Circular_reference)
