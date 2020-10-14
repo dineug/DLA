@@ -177,7 +177,7 @@ pattern instanceof RegExp; // pattern 변수가 RegExp의 인스턴스인가?
 ### 컨텍스트
 
 - 변수나 함수의 실행 컨텍스트는 다른 데이터에 접근할 수 있는지, 어떻게 행동하는지를 규정합니다.
-- 각 실행 컨텍스트에는 변수 객체(variable object)가 연결되어 있으며 해당 컨텍스트에서 정의된 모든 변수와 함수는 이 객체에 존재합니다.
+- `각 실행 컨텍스트에는 변수 객체(variable object)가 연결되어 있으며 해당 컨텍스트에서 정의된 모든 변수와 함수는 이 객체에 존재합니다.`
 - 이 객체를 코드에서 접근할 수는 없지만 이면에서 데이터를 다룰 때 이 객체를 이용합니다.
 - 가장 바깥쪽에 존재하는 실행 컨텍스트는 전역 컨텍스트입니다.
 - 실행 컨텍스트는 포함된 코드가 모두 실행될 때 파괴되는데, 이때 해당 컨텍스트 내부에서 정의된 변수와 함수도 함께 파괴됩니다.
@@ -189,12 +189,12 @@ pattern instanceof RegExp; // pattern 변수가 RegExp의 인스턴스인가?
 ### 스코프 체인(scope chain)
 
 - 컨텍스트에서 코드를 실행하면 변수 객체에 `스코프 체인`이 만들어집니다.
-- 스코프 체인의 목적은 실행 컨텍스트가 접근할 수 있는 모든 변수와 함수에 순서를 정의하는 것입니다.
+- `스코프 체인의 목적은 실행 컨텍스트가 접근할 수 있는 모든 변수와 함수에 순서를 정의하는 것입니다.`
 - 스코프 체인의 앞쪽은 항상 코드가 실행되는 컨텍스트의 변수 객체입니다.
 - 변수 객체의 다음 순서는 해당 컨텍스트를 포함하는 컨텍스트(부모 컨텍스트)이며 그 다음에는 다시 부모의 부모 컨텍스트입니다.
 - 이런 식으로 계속 진행하여 전역 컨텍스트에 도달할 때까지 계속합니다.
 - 전역 컨텍스트의 변수 객체는 항상 스코프 체인의 마지막에 존재합니다.
-- 식별자를 찾을 때는 스코프 체인 순서를 따라가면서 해당 식별자 이름을 검색합니다.
+- `식별자를 찾을 때는 스코프 체인 순서를 따라가면서 해당 식별자 이름을 검색합니다.`
 
 ```js
 let color = "blue";
@@ -275,6 +275,47 @@ console.log(getColor()); // "red"
 > 지역 변수를 참조할 때는 다음 변수 객체를 검색하지 않도록 자동으로 검색이 멈춤니다.  
 > 식별자가 로컬 컨텍스트에 정의되어 있으면 부모 컨텍스트에 같은 이름의 식별자가 있다 해도 참조할 수 없습니다.
 
+## 가비지 콜렉션
+
+> 자바스크립트는 필요한 메모리를 할당하고 더 이상 사용하지 않는 메모리는 자동으로 회수  
+> `더 이상 사용하지 않을 변수`를 찾아내서 해당 변수가 차지하고 있던 메모리를 회수
+
+### 표시하고 지우기 (mark-and-sweep)
+
+> 자바스크립트에서 가장 널리 쓰이는 가비지 컬렉션 방법입니다.  
+> 2단계 가비지 콜렉션 알고리즘입니다.
+
+1. Mark
+   - GC 루트 목록을 생성합니다.
+   - 자바스크립트의 경우 window객체가 루트로 작동하는데, 루트란 코드에서 참조되는 전역 변수를 뜻합니다.
+   - 모든 루트들은 active 혹은 alive(가비지가 아님)로 표시되며, 이들의 자식들 또한 재귀적으로 동일하게 처리됩니다.
+   - 즉, 루트에서 접근 가능하다면 가비지가 아니라고 판단됩니다.
+1. Sweep
+   - `active`로 표기되지 않은 메모리를 모두 가비지로 간주하여 반환 합니다.
+
+### 참조 카운팅 (reference counting)
+
+- 변수를 선언하고 참조 값이 할당되면 참조 카운트는 1입니다.
+- 다른 변수가 같은 값을 참조하면 참조 카운트가 늘어납니다.
+- 해당 값을 참조하는 변수에 다른 값을 할당하면 원래 값의 참조 카운트가 줄어듭니다.
+- 값의 참조 카운트가 0이 되면 해당 값에 접근할 방법이 없으며 메모리를 회수해도 안전합니다.
+- 가비지 컬렉터를 실행할 때 참조 카운트가 0인 값에서 사용하던 메모리를 회수합니다.
+
+#### 순환 참조 (cyclic/circular reference)
+
+```js
+function problem() {
+  const objectA = new Object();
+  const objectB = new Object();
+  objectA.someOtherObject = objectB;
+  objectB.anotherObject = objectA;
+}
+```
+
+> objectA와 objectB는 프로퍼티를 통해 서로를 참조하므로 각각의 참조 카운트는 2입니다.  
+> 표시하고 지우는 방식에서는 함수 실행이 끝날 때 두 변수가 모두 스코프를 벗어나므로 아무 문제도 없습니다.  
+> 참조 카운팅 방식에서는 함수 실행이 끝난 뒤에도 objectA와 objectB의 참조 카운트가 0이 되지않으므로 두 변수는 계속 존재합니다.
+
 ## Reference
 
 - [https://medium.com/@ethannam/javascripts-memory-model-7c972cd2c239](https://medium.com/@ethannam/javascripts-memory-model-7c972cd2c239)
@@ -283,3 +324,5 @@ console.log(getColor()); // "red"
 - [https://speakerdeck.com/deepu105/v8-memory-usage-stack-and-heap](https://speakerdeck.com/deepu105/v8-memory-usage-stack-and-heap)
 - [https://ui.toast.com/weekly-pick/ko_20200228/](https://ui.toast.com/weekly-pick/ko_20200228/)
 - [https://poiemaweb.com/es6-block-scope](https://poiemaweb.com/es6-block-scope)
+- [https://medium.com/naver-place-dev/%EC%9E%90%EB%B0%94%EC%8A%A4%ED%81%AC%EB%A6%BD%ED%8A%B8%EC%99%80-v8-%EC%97%94%EC%A7%84%EC%9D%98-%EB%A9%94%EB%AA%A8%EB%A6%AC-%EA%B4%80%EB%A6%AC-%ED%94%84%EB%A1%9C%EC%84%B8%EC%8A%A4-f45091e696e1](https://medium.com/naver-place-dev/%EC%9E%90%EB%B0%94%EC%8A%A4%ED%81%AC%EB%A6%BD%ED%8A%B8%EC%99%80-v8-%EC%97%94%EC%A7%84%EC%9D%98-%EB%A9%94%EB%AA%A8%EB%A6%AC-%EA%B4%80%EB%A6%AC-%ED%94%84%EB%A1%9C%EC%84%B8%EC%8A%A4-f45091e696e1)
+- [https://dev.to/deepu105/visualizing-memory-management-in-v8-engine-javascript-nodejs-deno-webassembly-105p](https://dev.to/deepu105/visualizing-memory-management-in-v8-engine-javascript-nodejs-deno-webassembly-105p)
