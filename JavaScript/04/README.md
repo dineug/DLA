@@ -293,6 +293,8 @@ console.log(getColor()); // "red"
 1. Sweep
    - `active`로 표기되지 않은 메모리를 모두 가비지로 간주하여 반환 합니다.
 
+![js-mark-and-sweep](https://github.com/dineug/DLA/blob/master/JavaScript/04/js-19.gif?raw=true)
+
 ### 참조 카운팅 (reference counting)
 
 - 변수를 선언하고 참조 값이 할당되면 참조 카운트는 1입니다.
