@@ -109,10 +109,195 @@ var add5 = createAdd(5);
 add5(10);
 ```
 
-![js-closure1](https://github.com/dineug/DLA/blob/master/JavaScript/07/js-02.png?raw=true)  
-![js-closure2](https://github.com/dineug/DLA/blob/master/JavaScript/07/js-03.png?raw=true)  
-![js-closure3](https://github.com/dineug/DLA/blob/master/JavaScript/07/js-04.png?raw=true)  
-![js-closure4](https://github.com/dineug/DLA/blob/master/JavaScript/07/js-05.png?raw=true)
+1. ![js-closure1](https://github.com/dineug/DLA/blob/master/JavaScript/07/js-02.png?raw=true)
+1. ![js-closure2](https://github.com/dineug/DLA/blob/master/JavaScript/07/js-03.png?raw=true)
+1. ![js-closure3](https://github.com/dineug/DLA/blob/master/JavaScript/07/js-04.png?raw=true)
+1. ![js-closure4](https://github.com/dineug/DLA/blob/master/JavaScript/07/js-05.png?raw=true)
+
+## hooks
+
+```js
+function useState(initVal) {
+  let _val = initVal;
+  const state = () => _val;
+  const setState = (newVal) => {
+    _val = newVal;
+  };
+
+  return [state, setState];
+}
+
+const [count, setCount] = useState(1);
+console.log(count()); // 1
+
+setCount(2);
+console.log(count()); // 2
+```
+
+```js
+const React = (function () {
+  let _val;
+
+  function useState(initVal) {
+    const state = _val || initVal;
+    const setState = (newVal) => {
+      _val = newVal;
+    };
+
+    return [state, setState];
+  }
+
+  function render(Component) {
+    const C = Component();
+    C.render();
+    return C;
+  }
+
+  return { useState, render };
+})();
+
+function Component() {
+  const [count, setCount] = React.useState(1);
+
+  return {
+    render: () => console.log(count),
+    click: () => setCount(count + 1),
+  };
+}
+
+var App = React.render(Component);
+App.click();
+var App = React.render(Component);
+App.click();
+var App = React.render(Component);
+App.click();
+```
+
+```js
+const React = (function () {
+  let hooks = [];
+  let idx = 0;
+
+  function useState(initVal) {
+    const state = hooks[idx] || initVal;
+    const setState = (newVal) => {
+      hooks[idx] = newVal;
+    };
+    idx++;
+    return [state, setState];
+  }
+
+  function render(Component) {
+    const C = Component();
+    C.render();
+    return C;
+  }
+
+  return { useState, render };
+})();
+
+function Component() {
+  const [count, setCount] = React.useState(1);
+  const [text, setText] = React.useState("apple");
+
+  return {
+    render: () => console.log({ count, text }),
+    click: () => setCount(count + 1),
+    type: (word) => setText(word),
+  };
+}
+
+var App = React.render(Component);
+App.click();
+var App = React.render(Component);
+App.type("pear");
+var App = React.render(Component);
+```
+
+```js
+const React = (function () {
+  let hooks = [];
+  let idx = 0;
+
+  function useState(initVal) {
+    const state = hooks[idx] || initVal;
+    const setState = (newVal) => {
+      hooks[idx] = newVal;
+    };
+    idx++;
+    return [state, setState];
+  }
+
+  function render(Component) {
+    idx = 0;
+    const C = Component();
+    C.render();
+    return C;
+  }
+
+  return { useState, render };
+})();
+
+function Component() {
+  const [count, setCount] = React.useState(1);
+  const [text, setText] = React.useState("apple");
+
+  return {
+    render: () => console.log({ count, text }),
+    click: () => setCount(count + 1),
+    type: (word) => setText(word),
+  };
+}
+
+var App = React.render(Component);
+App.click();
+var App = React.render(Component);
+App.type("pear");
+var App = React.render(Component);
+```
+
+```js
+const React = (function () {
+  let hooks = [];
+  let idx = 0;
+
+  function useState(initVal) {
+    const _idx = idx;
+    const state = hooks[idx] || initVal;
+    const setState = (newVal) => {
+      hooks[_idx] = newVal;
+    };
+    idx++;
+    return [state, setState];
+  }
+
+  function render(Component) {
+    idx = 0;
+    const C = Component();
+    C.render();
+    return C;
+  }
+
+  return { useState, render };
+})();
+
+function Component() {
+  const [count, setCount] = React.useState(1);
+  const [text, setText] = React.useState("apple");
+
+  return {
+    render: () => console.log({ count, text }),
+    click: () => setCount(count + 1),
+    type: (word) => setText(word),
+  };
+}
+
+var App = React.render(Component);
+App.click();
+var App = React.render(Component);
+App.type("pear");
+var App = React.render(Component);
+```
 
 ## Reference
 
