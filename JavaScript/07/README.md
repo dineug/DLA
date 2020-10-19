@@ -86,6 +86,50 @@ console.log(anotherFactorial(4));
 
 ![js-factorial](https://github.com/dineug/DLA/blob/master/JavaScript/07/js-01.png?raw=true)
 
+## 즉시 실행
+
+```js
+function f1() {
+  return function (a) {
+    console.log(a);
+  }(1);
+}
+f1();
+
+!function(a) {
+  console.log(a);
+}(1);
+
+true && function(a) {
+  console.log(a);
+}(1);
+
+1 ? function(a) {
+  console.log(a);
+}(1);
+
+0, function(a) {
+  console.log(a);
+}(1);
+
+var b = function(a) {
+  console.log(a);
+}(1);
+
+function f2() {}
+f2(function(a) {
+  console.log(a);
+}(1));
+
+var f3 = function c(a) {
+  console.log(a);
+}(1);
+
+new function() {
+  console.log(1);
+};
+```
+
 ## 클로저 (Closure)
 
 - Execution context(실행 컨텍스트)
