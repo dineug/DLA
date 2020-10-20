@@ -230,4 +230,61 @@ event.pageY ===
 
 ### 키보드 수정
 
+- event.shiftKey
+- event.ctrlKey
+- event.altKey
+- event.metaKey
+
+### 관련 요소
+
+> mouseover mouseout
+
+```js
+var EventUtil = {
+  getRelatedTarget: function (event) {
+    if (event.relatedTarget) {
+      return event.relatedTarget;
+    } else if (event.toElement) {
+      return event.toElement;
+    } else if (event.fromElement) {
+      return event.fromElement;
+    } else {
+      return null;
+    }
+  },
+};
+```
+
+### 버튼
+
+> mousedown mouseup 이벤트는 event 객체에 어떤 버튼을 누르거나 뗐는지 나타내는 button 프로퍼티가 있습니다.
+
+- `0`은 마우스 기본 버튼(왼쪽)
+- `1`은 마우스 가운데 버튼
+- `2`은 마우스 두번째 버튼(오른쪽)
+
+```js
+var EventUtil = {
+  getButton: function (event) {
+    if (document.implementation.hasFeature("MouseEvents", "2.0")) {
+      return event.button;
+    } else {
+      switch (event.button) {
+        case 0:
+        case 1:
+        case 3:
+        case 5:
+        case 7:
+          return 0;
+        case 2:
+        case 6:
+          return 2;
+        case 5:
+          return 1;
+      }
+    }
+  },
+};
+```
+
 ## Reference
