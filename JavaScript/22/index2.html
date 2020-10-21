@@ -1,0 +1,29 @@
+<!DOCTYPE html>
+<html>
+  <head></head>
+  <body>
+    <script>
+      function postMessage(data) {
+        window.parent.postMessage(
+          Object.assign(data, { from: "array-iframe" }),
+          "*"
+        );
+      }
+
+      function receiveMessage(event) {
+        const { from, command, value } = event.data;
+        if (from === "array-parent") {
+          switch (command) {
+            case "value":
+              console.log(`array-iframe value: ${value instanceof Array}`);
+              break;
+          }
+        }
+      }
+      window.addEventListener("message", receiveMessage);
+
+      postMessage({ command: "ready" });
+      postMessage({ command: "value", value: new Array() });
+    </script>
+  </body>
+</html>

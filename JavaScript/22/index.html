@@ -1,0 +1,36 @@
+<!DOCTYPE html>
+<html>
+  <head></head>
+  <body>
+    <iframe src="./index2.html"></iframe>
+    <script>
+      const iframe = document.querySelector("iframe");
+
+      function postMessage(element, data) {
+        element.contentWindow.postMessage(
+          Object.assign(data, { from: "array-parent" }),
+          "*"
+        );
+      }
+
+      function receiveMessage(event) {
+        const { from, command, value } = event.data;
+        if (from === "array-iframe") {
+          switch (command) {
+            case "ready":
+              postMessage(iframe, {
+                command: "value",
+                value: new Array(),
+              });
+              break;
+            case "value":
+              console.log(`array-parent value: ${value instanceof Array}`);
+              break;
+          }
+        }
+      }
+
+      window.addEventListener("message", receiveMessage);
+    </script>
+  </body>
+</html>
