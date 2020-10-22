@@ -9,3 +9,4 @@
 - [6장](https://github.com/dineug/DLA/tree/master/JavaScript/06)
 - [7장](https://github.com/dineug/DLA/tree/master/JavaScript/07)
 - [13장](https://github.com/dineug/DLA/tree/master/JavaScript/13)
+- [22장](https://github.com/dineug/DLA/tree/master/JavaScript/22)
