@@ -519,7 +519,7 @@ setTimeout(start, 50);
     <div id="myDiv" style="left: 0"></div>
     <script>
       var div = document.getElementById("myDiv");
-      var interval = 10;
+      var interval = 50;
       setTimeout(function f() {
         var left = parseInt(div.style.left) + 5;
 
@@ -595,7 +595,103 @@ function animate() {
 requestAnimationFrame(animate);
 ```
 
+```js
+// from, to, time
+function animationFrame(from, to, millisecond) {
+  const start = () => {
+    const start = new Date().getTime();
+    const animate = () => {
+      const current = new Date().getTime() - start;
+      const progressRate = current / millisecond;
+      const currentValue = {};
+      Object.keys(from).forEach((key) => {
+        const start = from[key];
+        const end = to[key];
+        const range = Math.abs(end - start);
+        if (start < end) {
+          currentValue[key] = range * progressRate + start;
+          if (currentValue[key] > end) {
+            currentValue[key] = end;
+          }
+        } else {
+          currentValue[key] = (range * progressRate - start) * -1;
+          if (currentValue[key] < end) {
+            currentValue[key] = end;
+          }
+        }
+      });
+      if (update) {
+        update(currentValue);
+      }
+      if (current < millisecond) {
+        requestAnimationFrame(animate);
+      } else {
+        if (update) {
+          update(to);
+        }
+        if (complete) {
+          complete();
+        }
+      }
+    };
+    requestAnimationFrame(animate);
+  };
+  let update = null;
+  let complete = null;
+  return {
+    update: (effect) => (update = effect),
+    complete: (effect) => (complete = effect),
+    start,
+  };
+}
+
+const animation = animationFrame({ x: 0 }, { x: 100 }, 1000);
+animation.update((crr) => {
+  console.log(crr);
+});
+animation.complete(() => {
+  console.log("END");
+});
+animation.start();
+```
+
 flip
+
+```js
+const flipAnimation = (selector, animationName) => {
+  const flipSnapshots = [];
+  document.querySelectorAll(selector).forEach((el) => {
+    // first
+    const { top, left } = el.getBoundingClientRect();
+    flipSnapshots.push({ el, top, left });
+  });
+  return () => {
+    flipSnapshots.forEach((snapshot) => {
+      // last
+      const el = snapshot.el;
+      const { top, left } = el.getBoundingClientRect();
+      const dx = snapshot.left - left;
+      const dy = snapshot.top - top;
+      if (dx || dy) {
+        // invert
+        el.style.transform = `translate(${dx}px,${dy}px)`;
+        el.style.transitionDuration = "0s";
+        // play
+        requestAnimationFrame(() => {
+          el.classList.add(animationName);
+          el.style.transform = "";
+          el.style.transitionDuration = "";
+          const onTransitionend = () => {
+            el.classList.remove(animationName);
+            el.removeEventListener("transitionend", onTransitionend);
+          };
+          el.addEventListener("transitionend", onTransitionend);
+        });
+      }
+    });
+  };
+};
+```
 
 ```html
 <!DOCTYPE html>
@@ -749,21 +845,21 @@ flip
 
 ```js
 // 감속
-function throttle(f, time) {
+function throttle(f, millisecond) {
   if (!f.__throttleTimerId) {
     f.__throttleTimerId = setTimeout(() => {
       f.__throttleTimerId = null;
       f();
-    }, time);
+    }, millisecond);
   }
 }
 
 // 마지막
-function debounce(f, time) {
+function debounce(f, millisecond) {
   clearTimeout(f.__debounceTimerId);
   f.__debounceTimerId = setTimeout(() => {
     f();
-  }, time);
+  }, millisecond);
 }
 
 function resize() {
