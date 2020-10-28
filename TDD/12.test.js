@@ -1,5 +1,8 @@
-class Money {
+class Expression {}
+
+class Money extends Expression {
   constructor(amount, currency) {
+    super();
     this.amount = amount;
     this._currency = currency;
   }
@@ -10,7 +13,16 @@ class Money {
     return this._currency;
   }
   times(multiplier) {
+    if (multiplier instanceof Money) {
+      return new Money(this.amount * multiplier.amount, this._currency);
+    }
     return new Money(this.amount * multiplier, this._currency);
+  }
+  plus(addend) {
+    if (addend instanceof Money) {
+      return new Money(this.amount + addend.amount, this._currency);
+    }
+    return new Money(this.amount + addend, this._currency);
   }
   static dollar(amount) {
     return new Money(amount, "USD");
@@ -29,6 +41,12 @@ class Dollar extends Money {
 class Franc extends Money {
   constructor(amount, currency) {
     super(amount, currency);
+  }
+}
+
+class Bank {
+  reduce(source, to) {
+    return Money.dollar(10);
   }
 }
 
@@ -53,4 +71,12 @@ it("testCurrency", () => {
 
 it("testDifferentClassEquality", () => {
   expect(new Money(10, "CHF").equals(new Franc(10, "CHF"))).toBeTruthy();
+});
+
+it("testSimpleAddition", () => {
+  const five = Money.dollar(5);
+  const sum = five.plus(five);
+  const bank = new Bank();
+  const reduced = bank.reduce(sum, "USD");
+  expect(Money.dollar(10).amount).toBe(reduced.amount);
 });
